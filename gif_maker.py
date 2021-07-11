@@ -1,5 +1,4 @@
-from func_tools import renderizer as renderizer
-import matplotlib.pyplot as plt
+import func_tools.renderizer as renderizer
 import logging
 import numpy as np
 import time
@@ -27,13 +26,13 @@ logger.info('--------------- New GIF ---------------')
 def vector_map(coords): 
     x = coords[0]
     y = coords[1]
-    return([np.sin(x+y), np.cos(x-y)]) 
+    return([x-y+x**2*np.sin(y), -2*y+x**3]) 
     
 # Parameters of the Frame object:
-x_inf_lim = -5
-x_sup_lim = 5
-y_inf_lim = -5
-y_sup_lim = 5
+x_inf_lim = -110
+x_sup_lim = 10
+y_inf_lim = -10
+y_sup_lim = 10
 
 lims = [x_inf_lim, x_sup_lim, y_inf_lim, y_sup_lim]
 color = 'b'
@@ -50,12 +49,12 @@ logger.info('size_dots: {}'.format(size_dots))
 
     
 # Parameters of the gif file
-gif_name = 'eres_tu.gif'
-number_of_dots_to_plot = 40
+gif_name = 'Custom_ODE.gif'
+number_of_dots_to_plot = 60
 number_of_frames = 120
 dot_step = 0.025
-number_of_initial_dots = 120
-fps = 120
+number_of_initial_dots = 300
+fps = 60
 seed = 19970905
 np.random.seed(seed)
 
@@ -74,11 +73,11 @@ for i in range(number_of_initial_dots):
     b = (y_sup_lim - y_inf_lim)*np.random.random()-y_sup_lim
     initial_dots.append([a, b])
     
-#initial_dots = [[1,1]]
+# initial_dots = [[1,1]]
 final_lines = []
 
 time_total = 0
-# Calculate the dots
+# Compute the dots
 tic = time.time()
 
 
@@ -110,83 +109,7 @@ logger.info('Time to compute the initial dots images: {}'.format(toc-tic))
 
 time_total += toc-tic        
     
-"""   
-        
-    
 
-
-
-# Draw all the frames
-tic = time.time()
-
-final_frames = []
-
-for frame_cont in range(number_of_frames):
-    int_frame = []
-    
-    if frame_cont == 0:
-    
-        for line in final_dots:
-            
-            aux_matrix = np.zeros([2, number_of_frames])
-            aux_matrix[:, 1:] = line[:, :-1]
-            aux_matrix[:, 0] = line[:, -1]
-            int_frame.append(aux_matrix)
-           
-            int_frame.append(line)
-            
-        final_frames.append(int_frame)
-    else:
-        
-        final_dots = final_frames[-1]
-        for line in final_dots:
-            
-            aux_matrix = np.zeros([2, number_of_frames])
-            aux_matrix[:, 1:] = line[:, :-1]
-            aux_matrix[:, 0] = line[:, -1]
-            int_frame.append(aux_matrix)
-            
-        final_frames.append(int_frame)
-        
-# Shuffle the lines in each frame
-initial_frame_of_each_line = np.random.randint(number_of_frames, size=number_of_initial_dots)
-
-
-shuffled_frames = []
-
-frame_cont = 0
-for frame in final_frames:
-    int_frame = []
-    line_cont = 0
-    for line in frame:
-        aux_matrix = np.zeros([2, number_of_frames])
-        initial_frame_line = initial_frame_of_each_line[line_cont]
-        
-        for coord_cont in range(number_of_dots_to_plot):
-        #for coord_cont in range(number_of_frames):
-            
-            #int_coord = (coord_cont + initial_frame_line + frame_cont)%number_of_frames
-            int_coord = (coord_cont + initial_frame_line)%number_of_frames
-           
-            aux_matrix[:, coord_cont] = line[:, int_coord]
-        
-        line_cont += 1
-        
-        
-        int_frame.append(aux_matrix)
-        
-    frame_cont += 1
-    shuffled_frames.append(int_frame)    
-    
-        
-
-
-
-
-toc = time.time()
-logger.info('Time to compute the moving dots of each frame: {}'.format(toc-tic))    
-time_total += toc-tic    
-"""
 # Generate the .gif file
 tic = time.time()
 
